@@ -1,0 +1,20 @@
+{
+  "env": {
+    "browser": 2,
+    "mocha": 2
+  },
+  "globals": {
+    "io": 2,
+    "google": 2,
+    "device": 2,
+    "_": 2,
+    "$": 2,
+    "angular": 2,
+    "jQuery": 2,
+    "d3": 2,
+    "Datamap": 2,
+    "expect": 2,
+    "inject": 2,
+    "sinon": 2
+  }
+}

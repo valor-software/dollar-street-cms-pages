@@ -1,0 +1,26 @@
+/node_modules/
+/dist/
+/ds.comparison.public/
+/ds.consumer.public/
+/coverage
+.vscode
+.idea
+npm-debug.log
+update_catalog.js
+*.ipr
+*.iws
+*.iml
+.idea
+progressive.json
+progress.json
+!*.min.css
+# new relic log
+newrelic_agent.log
+dump.rdb
+dump
+ds-places-template.xlsx
+
+# Ignore Mac DS_Store files
+.DS_Store
+
+mails-list.txt
