@@ -1,6 +1,8 @@
 dollar-street-cms-api
 =====================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/valor-software/dollar-street-cms-pages.svg)](https://greenkeeper.io/)
+
 [ ![Codeship Status for valor-software/dollar-street-pages](https://codeship.com/projects/1765f210-5c54-0132-3613-06a513245d06/status)](https://codeship.com/projects/50778)
 
 A web-interface for browsing and managing a large collection of photos &amp; videos, by tags like income and location.
