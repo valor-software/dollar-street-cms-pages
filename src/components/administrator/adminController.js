@@ -1,10 +1,6 @@
 angular.module('job')
-  .controller('AdminController', ['$scope', '$window', '$rootScope', '$sce', '$http', '$state', 'cmsConfig',
-    function ($scope, $window, $rootScope, $sce, $http, $state, cmsConfig) {
-      angular.element(document).ready(function () {
-        $window.io = $window.io(cmsConfig.serverApi);
-      });
-
+  .controller('AdminController', ['$scope', '$rootScope', '$sce', '$http', '$state', 'cmsConfig',
+    function ($scope, $rootScope, $sce, $http, $state, cmsConfig) {
       $rootScope.isPreview = false;
 
       $scope.logout = function () {

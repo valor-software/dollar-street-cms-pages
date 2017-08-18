@@ -28,7 +28,8 @@ gulp.task('lint', () =>
 
 gulp.task('env', () => {
   const prodEnvFile = './src/components/app.config.js';
-  const envInputKey = 'CMS_SERVER_URL';
+  const serverUrl = 'CMS_SERVER_URL';
+  const socketsUrl = 'CMS_SOCKETS_URL';
 
   fs.readFile(prodEnvFile, 'utf8', function (err, data) {
     if (err) {
@@ -39,7 +40,11 @@ gulp.task('env', () => {
 
     textByLine.forEach((line, index) => {
       if(line.match(/serverApi:/g)) {
-        textByLine[index] = `  serverApi: \'${process.env[envInputKey]}\',`;
+        textByLine[index] = `  serverApi: \'${process.env[serverUrl]}\',`;
+      }
+
+      if(line.match(/socketsApi:/g)) {
+        textByLine[index] = `  socketsApi: \'${process.env[socketsUrl]}\'`;
       }
     });
 

@@ -24,12 +24,16 @@ angular.module('job', [
   'ui.tinymce',
   'ngCropper'
 ])
-.run(['$rootScope', function ($rootScope) {
+.run(['$rootScope', '$window', 'cmsConfig', function ($rootScope, $window, cmsConfig) {
   $rootScope.safeApply = function () {
     if (!$rootScope.$$phase) {
       $rootScope.$apply();
     }
   };
+
+  angular.element(document).ready(function () {
+    $window.io = $window.io(cmsConfig.socketsApi);
+  });
 }]);
 
 angular.module('job')
@@ -40,8 +44,7 @@ angular.module('job')
       $httpProvider.defaults.withCredentials = true;
 
       $provide.value('amazonUrl', '//static.dollarstreet.org/');
-      // admin panel states in administrator component
-      // frontend states in frontend component
+
       $locationProvider.html5Mode(true);
 
       $urlRouterProvider.otherwise('/');
