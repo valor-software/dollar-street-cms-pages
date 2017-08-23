@@ -24,7 +24,7 @@ angular.module('job', [
   'ui.tinymce',
   'ngCropper'
 ])
-.run(['$rootScope', '$window', 'cmsConfig', function ($rootScope, $window, cmsConfig) {
+.run(['$rootScope', '$http', '$window', 'cmsConfig', function ($rootScope, $http, $window, cmsConfig) {
   $rootScope.safeApply = function () {
     if (!$rootScope.$$phase) {
       $rootScope.$apply();
@@ -32,7 +32,9 @@ angular.module('job', [
   };
 
   angular.element(document).ready(function () {
-    $window.io = $window.io(cmsConfig.socketsApi);
+    $http.get(cmsConfig.serverApi + '/sockets').success(function (res) {
+      $window.io = $window.io(cmsConfig.socketsApi + ':' + res.port);
+    });
   });
 }]);
 
