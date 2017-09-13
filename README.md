@@ -25,7 +25,7 @@ npm run build
 npm run deploy
 ```
 
-API usage
+API usage:
 ```
 # install, run and build app
 ./server.sh install
