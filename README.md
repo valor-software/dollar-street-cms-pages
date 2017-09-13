@@ -1,4 +1,4 @@
-dollar-street-cms-api
+dollar-street-cms-pages
 =====================
 
 [ ![Codeship Status for valor-software/dollar-street-pages](https://codeship.com/projects/1765f210-5c54-0132-3613-06a513245d06/status)](https://codeship.com/projects/50778)
