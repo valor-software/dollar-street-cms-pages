@@ -5,7 +5,7 @@ dollar-street-cms-api
 
 A web-interface for browsing and managing a large collection of photos &amp; videos, by tags like income and location.
 
-##Install
+####Install
 
 ```
 npm install
