@@ -1,7 +1,7 @@
 angular.module('job')
   .controller('AllMediaAdminController', [
-    '$scope', '$http', '$state', '$stateParams', '$modal', '$timeout', 'AmazonPath', 'cmsConfig',
-    function ($scope, $http, $state, $stateParams, $modal, $timeout, AmazonPath, cmsConfig) {
+    '$scope', '$http', '$state', '$stateParams', '$modal', '$timeout', '$window', 'AmazonPath', 'cmsConfig',
+    function ($scope, $http, $state, $stateParams, $modal, $timeout, $window, AmazonPath, cmsConfig) {
       $scope.selectImages = {
         isActive: false
       };
@@ -336,10 +336,11 @@ angular.module('job')
         }
       }
 
-      io.on('media_update_error', function (err) {
+      $window.io.on('media_update_error', function (err) {
         console.log(err);
       });
-      io.on('media_update', function (data) {
+
+      $window.io.on('media_update', function (data) {
         if (getParams.row) {
           $scope.images.forEach(function (column) {
             column.image.forEach(function (e) {
