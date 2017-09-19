@@ -1,14 +1,27 @@
 angular.module('job')
   .controller('AdminPlaceController', ['async', '_',
-    '$scope', '$http', '$stateParams', '$sce', 'mediaObj',
+    '$scope', '$http', '$stateParams', '$sce', '$window', 'mediaObj',
     '$state', '$modal', 'addNewThing', 'PlaceAdminService', 'AmazonPath', 'cmsConfig',
-    function (async, _, $scope, $http, $stateParams, $sce, mediaObj,
+    function (async, _, $scope, $http, $stateParams, $sce, $window, mediaObj,
               $state, $modal, addNewThing, PlaceAdminService, AmazonPath, cmsConfig) {
       $scope.loadPage = true;
       $scope.choseImgArr = [];
       $scope.selectedIcon = {};
+
       initController();
-      socetMessages();
+
+      if (typeof $window.io.on === 'function') {
+        socetMessages();
+      } else {
+        var watcher = $scope.$watch(function () {
+          return $window.io.on
+        }, function(n, o){
+            if (n) {
+              socetMessages();
+              watcher();
+            }
+        });
+      }
 
       $scope.nextPlaceImages = function (limit, isApproved) {
         if ($scope.loadPaging) {
@@ -476,13 +489,13 @@ angular.module('job')
       };
 
       function socetMessages() {
-        io.on('update_info', function (data) {
+        $window.io.on('update_info', function (data) {
           if ($scope.placeId === data && $scope.uploadInfoImage && $scope.uploadInfoImage.name) {
             $scope.progres = true;
           }
         });
 
-        io.on('update_info_image', function (data) {
+        $window.io.on('update_info_image', function (data) {
           if ($scope.placeId === data && $scope.selectForm._id) {
             $scope.checkedSelectForm($scope.selectForm);
             $scope.uploadInfoImage = null;
@@ -492,7 +505,7 @@ angular.module('job')
 
         $scope.imagesLoaded = [];
 
-        io.on('add_loaded_image_' + $scope.placeId, function (data) {
+        $window.io.on('add_loaded_image_' + $scope.placeId, function (data) {
           $scope.imagesLoaded.push(data);
 
           $scope.$apply();
