@@ -36,6 +36,23 @@ angular.module('job')
       class: 'col-md-2 background-white'
     }];
 
+    $scope.streetLevelsTableHeader = [{
+      name: 'First',
+      class: 'col-md-3 background-white'
+    }, {
+      name: 'Second',
+      class: 'col-md-3 background-white'
+    }, {
+      name: 'Third',
+      class: 'col-md-3 background-white'
+    }, {
+      name: 'Fourth',
+      class: 'col-md-2 background-white'
+    }, {
+      name: '',
+      class: 'col-md-1 background-white'
+    }];
+
     $http.get(cmsConfig.serverApi + '/street').success(function (data) {
       if (data.error) {
         console.error(data);
@@ -50,7 +67,7 @@ angular.module('job')
         data = data[0];
       }
 
-      $http.post(cmsConfig.serverApi + '/show-divisions/' + data._id, {showDividers: data}).success(function (res) {
+      $http.post(cmsConfig.serverApi + '/show-street-attrs/' + data._id, {showStreetAttrs: data}).success(function (res) {
         if (res.error) {
           console.error(res);
         }
@@ -69,6 +86,10 @@ angular.module('job')
         street.lowDividerCoord = 0;
         street.mediumDividerCoord = 0;
         street.highDividerCoord = 0;
+        street.firstLabelName = '';
+        street.secondLabelName = '';
+        street.thirdLabelName = '';
+        street.fourthLabelName = '';
       }
 
       if (data.low && data.medium && data.high && data.rich && data.poor) {
@@ -93,6 +114,26 @@ angular.module('job')
             lowDividerCoord: data.lowDividerCoord,
             mediumDividerCoord: data.mediumDividerCoord,
             highDividerCoord: data.highDividerCoord
+          }).success(function (data) {
+            if (data.error) {
+              console.error(data.error);
+            }
+          });
+        }
+      }
+
+      if (data.firstLabelName && data.secondLabelName && data.thirdLabelName && data.fourthLabelName) {
+        if (
+          street.firstLabelName !== data.firstLabelName,
+          street.secondLabelName !== data.secondLabelName,
+          street.thirdLabelName !== data.thirdLabelName,
+          street.fourthLabelName !== data.fourthLabelName
+        ) {
+          $http.post(cmsConfig.serverApi + '/street-labels/edit/' + street._id, {
+            firstLabelName: data.firstLabelName,
+            secondLabelName: data.secondLabelName,
+            thirdLabelName: data.thirdLabelName,
+            fourthLabelName: data.fourthLabelName
           }).success(function (data) {
             if (data.error) {
               console.error(data.error);
