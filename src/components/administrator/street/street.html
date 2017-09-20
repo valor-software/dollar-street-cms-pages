@@ -9,19 +9,42 @@
   <div class="ibox-content m-b-sm border-bottom">
     <div class="row">
 
-      <div class="col-sm-3">
+      <div class="col-sm-2">
         <div class="form-group" ng-if="isAdmin">
           <p><label class="control-label">Show dividers</label></p>
           <label class="ios7-switch">
-
             <input type="checkbox"
                    ng-model="streetData[0].showDividers"
                    ng-change="isShowDividers(streetData)">
-
             <div></div>
           </label>
         </div>
       </div>
+
+      <div class="col-sm-2">
+        <div class="form-group" ng-if="isAdmin">
+          <p><label class="control-label">Show currency</label></p>
+          <label class="ios7-switch">
+            <input type="checkbox"
+                   ng-model="streetData[0].showCurrency"
+                   ng-change="isShowDividers(streetData)">
+            <div></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="col-sm-2">
+        <div class="form-group" ng-if="isAdmin">
+          <p><label class="control-label">Show labels</label></p>
+          <label class="ios7-switch">
+            <input type="checkbox"
+                   ng-model="streetData[0].showLabels"
+                   ng-change="isShowDividers(streetData)">
+            <div></div>
+          </label>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -185,6 +208,81 @@
                 </tr>
                 </tbody>
               </table>
+
+              <br>
+
+              <h3>Street levels</h3>
+
+              <div class="table-header">
+                <sort-table-header
+                  class="table table-striped table-bordered table-hover dataTables-example dataTable"
+                  sort="sort" cells="::streetLevelsTableHeader"></sort-table-header>
+              </div>
+
+              <table class="table table-striped table-bordered table-hover dataTables-example vertical-middle">
+                <tbody>
+
+                <tr ng-repeat="streetLabels in streetData">
+                  <td class="col-md-3">
+                  <span editable-text="streetLabels.firstLabelName"
+                        e-name="firstLabelName"
+                        e-form="rowform"
+                        e-required>
+                    {{ streetLabels.firstLabelName  }}
+                  </span>
+                  </td>
+
+                  <td class="col-md-3">
+                  <span editable-text="streetLabels.secondLabelName"
+                        e-name="secondLabelName"
+                        e-form="rowform"
+                        e-required>
+                    {{ streetLabels.secondLabelName }}
+                  </span>
+                  </td>
+
+                  <td class="col-md-3">
+                  <span editable-text="streetLabels.thirdLabelName"
+                        e-name="thirdLabelName"
+                        e-form="rowform"
+                        e-required>
+                    {{ streetLabels.thirdLabelName }}
+                  </span>
+                  </td>
+
+                  <td class="col-md-2">
+                  <span editable-text="streetLabels.fourthLabelName"
+                        e-name="fourthLabelName"
+                        e-form="rowform"
+                        e-required>
+                    {{ streetLabels.fourthLabelName }}
+                  </span>
+                  </td>
+
+                  <td class="col-md-1 text-center">
+                    <form editable-form name="rowform" onbeforesave="saveStreet(streetData, $data)"
+                          ng-show="rowform.$visible"
+                          class="form-buttons form-inline">
+                      <button type="submit" ng-disabled="rowform.$waiting"
+                              class="btn btn-primary btn-circle btn-sm">
+                        <i class="fa fa-check"></i>
+                      </button>
+                      <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"
+                              class="btn btn-default btn-circle btn-sm">
+                        <i class="fa fa-sign-out"></i>
+                      </button>
+                    </form>
+
+                    <a ng-show="!rowform.$visible"
+                       ng-if="removeField"
+                       ng-click="rowform.$show()"
+                       class="btn btn-primary btn-circle btn-sm">
+                      <i class="glyphicon glyphicon-pencil"></i>
+                    </a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -192,5 +290,3 @@
     </div>
   </div>
 </div>
-
-
