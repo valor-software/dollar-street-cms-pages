@@ -351,7 +351,6 @@ angular.module('photo.area')
           }
           var fd = new FormData();
           fd.append('file', file[count]);
-
           var trig = new Trigger(scope, file, count, 1400);
           trig.start();
           $http.post(uploadUrl, fd, {
