@@ -5,6 +5,7 @@ const path = require('path');
 const gulp = require('gulp');
 const esLint = require('gulp-eslint');
 const clean = require('gulp-clean');
+const exec = require('child_process').exec;
 
 const opts = {minify: false};
 
@@ -25,6 +26,18 @@ gulp.task('lint', () =>
     .pipe(esLint.format())
     .pipe(esLint.failOnError())
 );
+
+gulp.task('watch', () => {
+  gulp.watch('src/**/*.*', ['build']);
+});
+
+gulp.task('build', (cb) => {
+  exec('npm run build', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+});
 
 gulp.task('env', () => {
   const prodEnvFile = './src/components/app.config.js';
