@@ -506,9 +506,13 @@ angular.module('job')
         $scope.imagesLoaded = [];
 
         $window.io.on('add_loaded_image_' + $scope.placeId, function (data) {
-          $scope.imagesLoaded.push(data);
+          let picture = $scope.imagesLoaded.find((pic) => pic.amazonfilename === data.amazonfilename);
 
-          $scope.$apply();
+          if (!picture) {
+            $scope.imagesLoaded.push(data);
+
+            $scope.$apply();
+          }
         });
       }
 
