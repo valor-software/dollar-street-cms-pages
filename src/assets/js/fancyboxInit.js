@@ -20,10 +20,6 @@ $(window).load(function () {
       }
     },
     beforeShow: function () {
-      window.downloadImage = function () {
-        window.location.href = window.imageUrl;
-      };
-
       var el = null;
       var id = $(this.element).data('media-title-id');
       var image = $(this.element).data('image');
@@ -96,14 +92,14 @@ $(window).load(function () {
 
         $(this.skin[0].childNodes[0]).before(header);
         // serverUrl
-        var url = '/download_image?path=' + image.src +
+        /*var url = '/download_image?path=' + image.src +
                   'origin-file-format-' + image.amazonfilename +
                   ';nameFile=' + image.filename +
                   ';thing=' + urlThing +
                   ';place=' + currentPlace.name +
-                  ';income=' + Math.round(currentPlace.income);
+                  ';income=' + Math.round(currentPlace.income);*/
 
-        window.imageUrl = url;
+        window.imageDownloadUrl = '//static.dollarstreet.org/' + image.src + 'original-' + image.amazonfilename;
 
         var footer;
 
@@ -111,8 +107,21 @@ $(window).load(function () {
 
         /*eslint-disable */
 
-        function downloadImage() {
-          window.location.href = url;
+        window.saveFile = function(url) {
+          var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
+          var xhr = new XMLHttpRequest();
+          xhr.responseType = 'blob';
+          xhr.onload = function() {
+            var a = document.createElement('a');
+            a.href = window.URL.createObjectURL(xhr.response);
+            a.download = filename;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            delete a;
+          };
+          xhr.open('GET', 'http:' + url);
+          xhr.send();
         }
 
         /*eslint-enable */
@@ -120,15 +129,15 @@ $(window).load(function () {
         if (frontend) {
           footer = '<div class="row" style="padding-top: 10px"><div class="col-md-4"></div>' +
             '<div class="col-md-1" style="text-align: left"></div>' +
-            '<div class="col-md-3" style="text-align: center"><a >' +
-            '<i class="glyphicon glyphicon-save download_arrow" onclick="window.downloadImage()"></i></a></div>' +
+            '<div class="col-md-3" style="text-align: center"><a>' +
+            '<i class="glyphicon glyphicon-save download_arrow" onclick="window.saveFile(window.imageDownloadUrl)"></i></a></div>' +
             '<div class="col-md-4" style="text-align: right">' + photographerName + '</div>' +
             '</div>';
         } else {
           footer = '<div class="row" style="padding-top:10px"><div class="col-md-4">' + image.filename + '</div>' +
             '<div class="col-md-1" style="text-align: left">' + image.size + '</div>' +
             '<div class="col-md-3" style="text-align: center"><a>' +
-            '<i class="glyphicon glyphicon-save download_arrow"  onclick="window.downloadImage()"></i></a></div>' +
+            '<i class="glyphicon glyphicon-save download_arrow"  onclick="window.saveFile(window.imageDownloadUrl)"></i></a></div>' +
             '<div class="col-md-4" style="text-align: right">' + photographerName + '</div>' +
             '</div>';
         }
