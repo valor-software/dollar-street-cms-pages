@@ -8,7 +8,7 @@ angular.module('job')
         scope.listOfQueueImages = [];
         scope.listOfConvertImages = [];
 
-        $window.io.on('add_image_to_convert', function (data) {
+        window.io.on('add_image_to_convert', function (data) {
           if (!scope.isQueue) {
             window.onbeforeunload = function () {
               var message = 'File converting are in progress. If you continue,you not be able to watch the process' +
@@ -24,7 +24,7 @@ angular.module('job')
           scope.$apply();
         });
 
-        $window.io.on('start_convert', function (data) {
+        window.io.on('start_convert', function (data) {
           scope.listOfQueueImages = scope.listOfQueueImages.filter(function (image) {
             if (data.originFile !== image.originFile) {
               return true;
@@ -36,7 +36,7 @@ angular.module('job')
           });
         });
 
-        $window.io.on('convert_progress', function (data) {
+        window.io.on('convert_progress', function (data) {
           scope.listOfConvertImages.forEach(function (image, i) {
             if (data.originFile !== image.originFile) {
               return;

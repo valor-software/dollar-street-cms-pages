@@ -336,11 +336,11 @@ angular.module('job')
         }
       }
 
-      $window.io.on('media_update_error', function (err) {
+      window.io.on('media_update_error', function (err) {
         console.log(err);
       });
 
-      $window.io.on('media_update', function (data) {
+      window.io.on('media_update', function (data) {
         if (getParams.row) {
           $scope.images.forEach(function (column) {
             column.image.forEach(function (e) {
