@@ -10,11 +10,11 @@ angular.module('job')
 
       initController();
 
-      if (typeof $window.io.on === 'function') {
+      if (typeof window.io.on === 'function') {
         socetMessages();
       } else {
         var watcher = $scope.$watch(function () {
-          return $window.io.on
+          return window.io.on
         }, function(n, o){
             if (n) {
               socetMessages();
@@ -489,13 +489,13 @@ angular.module('job')
       };
 
       function socetMessages() {
-        $window.io.on('update_info', function (data) {
+        window.io.on('update_info', function (data) {
           if ($scope.placeId === data && $scope.uploadInfoImage && $scope.uploadInfoImage.name) {
             $scope.progres = true;
           }
         });
 
-        $window.io.on('update_info_image', function (data) {
+        window.io.on('update_info_image', function (data) {
           if ($scope.placeId === data && $scope.selectForm._id) {
             $scope.checkedSelectForm($scope.selectForm);
             $scope.uploadInfoImage = null;
@@ -505,7 +505,7 @@ angular.module('job')
 
         $scope.imagesLoaded = [];
 
-        $window.io.on('add_loaded_image_' + $scope.placeId, function (data) {
+        window.io.on('add_loaded_image_' + $scope.placeId, function (data) {
           let picture = $scope.imagesLoaded.find((pic) => pic.amazonfilename === data.amazonfilename);
 
           if (!picture) {

@@ -33,7 +33,7 @@ angular.module('job', [
 
   angular.element(document).ready(function () {
     $http.get(cmsConfig.serverApi + '/sockets').success(function (res) {
-      $window.io = $window.io(cmsConfig.socketsApi + ':' + res.port);
+      window.io = window.io(cmsConfig.socketsApi + ':' + res.port);
     });
   });
 }]);
