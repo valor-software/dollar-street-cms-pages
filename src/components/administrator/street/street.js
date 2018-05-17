@@ -1,6 +1,7 @@
 angular.module('job')
   .controller('StreetController', ['$scope', '$http', 'cmsConfig', function ($scope, $http, cmsConfig) {
     $scope.loadPage = true;
+    $scope.dividerNumber = '';
 
     $scope.streetBorderTableHeader = [{
       name: 'Poorest',
@@ -59,6 +60,7 @@ angular.module('job')
         return;
       }
       $scope.streetData = data.data;
+
       $scope.loadPage = false;
     });
 
@@ -142,4 +144,26 @@ angular.module('job')
         }
       }
     };
+
+    $scope.addDivider = () => {
+      const street = $scope.streetData[0];
+      const divider = $scope.dividerNumber;
+      if (divider) {
+        $http.get(`${cmsConfig.serverApi}/street-dividers/add/${street._id}/${divider}`).success( (data) => {
+
+          $scope.streetData = data.data;
+          $scope.dividerNumber = '';
+        });
+      }
+    };
+
+    $scope.removeDivider = (divider) => {
+      const street = $scope.streetData[0];
+
+      $http.get(`${cmsConfig.serverApi}/street-dividers/remove/${street._id}/${divider}`).success( (data) => {
+
+        $scope.streetData = data.data;
+      });
+    }
+
   }]);

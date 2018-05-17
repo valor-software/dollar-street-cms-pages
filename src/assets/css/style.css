@@ -7498,3 +7498,12 @@ file .form-control{
 .admin-thing-icon{
   width: 30px;
 }
+
+.dividers-list-container .dividers-item {
+  padding: 4px 0;
+  border-top: 1px solid #DDDDDD;
+}
+
+.dividers-list-container .dividers-item:first-child {
+  border-color: transparent;
+}
