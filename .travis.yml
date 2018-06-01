@@ -33,5 +33,5 @@ jobs:
     deploy:
       provider: script
       skip_cleanup: true
-      script: ssh -o StrictHostKeyChecking=no -i id_rsa ubuntu@52.211.52.39 /home/ubuntu/www/run_ds_consumer_api.sh
+      script: ssh -o StrictHostKeyChecking=no -i id_rsa ubuntu@52.211.52.39 /home/ubuntu/www/run_ds_cms_pages.sh
       on: development
