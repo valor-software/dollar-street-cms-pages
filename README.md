@@ -15,13 +15,13 @@ npm install
 
 UI usage (API should be started separately):
 ```
-# start webpack-dev-server listening on localhost:8080, hot reload
+## start webpack-dev-server listening on localhost:8080, hot reload
 npm run dev
 
-# build in development and server via nginx
+## build in development and server via nginx
 npm run build
 
-# production build
+## production build
 npm run deploy
 ```
 
