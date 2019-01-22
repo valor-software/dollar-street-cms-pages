@@ -99,7 +99,7 @@ $(window).load(function () {
                   ';place=' + currentPlace.name +
                   ';income=' + Math.round(currentPlace.income);*/
 
-        window.imageDownloadUrl = '//static.dollarstreet.org/' + image.src + 'original-' + image.amazonfilename;
+        window.imageDownloadUrl = '//static3.dollarstreet.org/' + image.src + 'original-' + image.amazonfilename;
 
         var footer;
 

@@ -41,8 +41,8 @@ gulp.task('build', (cb) => {
 
 gulp.task('env', () => {
   const prodEnvFile = './src/components/app.config.js';
-  const serverUrl = 'CMS_SERVER_URL';
-  const socketsUrl = 'CMS_SOCKETS_URL';
+  const CMS_SERVER_URL = process.env.CMS_SERVER_URL || 'http://localhost';
+  const EXTERNAL_PORT = process.env.EXTERNAL_PORT || 8011;
 
   fs.readFile(prodEnvFile, 'utf8', function (err, data) {
     if (err) {
@@ -53,11 +53,11 @@ gulp.task('env', () => {
 
     textByLine.forEach((line, index) => {
       if(line.match(/serverApi:/g)) {
-        textByLine[index] = `  serverApi: \'${process.env[serverUrl]}\',`;
+        textByLine[index] = `  serverApi: \'${CMS_SERVER_URL}:${EXTERNAL_PORT}\',`;
       }
 
       if(line.match(/socketsApi:/g)) {
-        textByLine[index] = `  socketsApi: \'${process.env[socketsUrl]}\'`;
+        textByLine[index] = `  socketsApi: \'${CMS_SERVER_URL}\'`;
       }
     });
 
