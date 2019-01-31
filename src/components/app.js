@@ -45,7 +45,7 @@ angular.module('job')
 
       $httpProvider.defaults.withCredentials = true;
 
-      $provide.value('amazonUrl', '//static3.dollarstreet.org/');
+      $provide.value('amazonUrl', '//' + S3_BUCKET + '/');
 
       $locationProvider.html5Mode(true);
 
