@@ -2,11 +2,8 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
   template: 'index.tmpl.html',
@@ -17,7 +14,10 @@ const config = {
 
 /* eslint-disable */
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod';
+const S3_BUCKET = process.env.S3_BUCKET || 'static3.dollarstreet.org';
+const CMS_SERVER_URL = process.env.CMS_SERVER_URL || 'http://localhost';
+const EXTERNAL_PORT = process.env.EXTERNAL_PORT || '8011';
 const absSrc = path.join(__dirname, config.src);
 const absDest = path.join(__dirname, config.dest);
 
@@ -26,93 +26,67 @@ const wConfig = {
   profile: true,
   cache: true,
   devtool: isProduction ? 'sourcemaps' : 'eval',
-  context: path.join(__dirname, config.src),
-  /*entry: {
-    dollarstreet: './components',
-    angular: ['jquery', 'angular', 'angular-ui-router', 'angular-touch', 'oclazyload', 'angular-bootstrap']
-  },*/
+  context: absSrc,
+  entry: {
+    'app': ['app.js', 'app.config.js'],
+    'fancyboxInit': 'js/fancyboxInit.js'
+  },
   output: {
     path: absDest,
-    publicPath: './',
-    filename: 'components/[name]-[hash:6].js',
-    chunkFilename: 'components/[name]-[hash:6].js'
+    filename: '[name].js',
+    library: '[name]',
+    publicPath: '/'
   },
   resolve: {
-    root: [absSrc],
-    modulesDirectories: ['./components', 'node_modules'],
+    modulesDirectories: ['components', 'assets', 'libs', 'node_modules'],
     extensions: ['', '.js', '.png', '.gif', '.jpg'],
-    alias: {
-      'angular-google-maps': 'angular-google-maps/dist/angular-google-maps.min.js',
-      'ng-infinite-scroll': 'ng-infinite-scroll/build/ng-infinite-scroll.js',
-      datamaps: 'datamaps/dist/datamaps.all.js'
-    }
-  },
-  module: {
-    noParse: [
-      /jquery|angular-google-maps|bootstrap/ig,
-      /min\.css$/
-    ],
-    loaders: [
-      {
-        test: /\.less$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap&root=' + absSrc + '!less-loader')
-      }, {
-        test: /\.css$/,
-        exclude: /bootstrap/ig,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?root=' + absSrc)
-      }, {
-        test: /.*\.(gif|png|jpe?g)$/i,
-        loaders: [
-          'file?hash=sha512&digest=hex&name=[hash].[ext]',
-          'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
-        ]
-      }, {
-        test: /\.html$/,
-        loader: 'html?name=[name].[ext]&root=' + absSrc
-      }, {
-        test: [/fontawesome-webfont\.svg/, /fontawesome-webfont\.eot/],
-        loader: 'file?name=assets/fonts/[name].[ext]'
-      },
-      // Needed for the css-loader when [bootstrap-webpack](https://github.com/bline/bootstrap-webpack)
-      // loads bootstrap's css.
-      {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?name=assets/fonts/[name].[ext]&limit=10000&mimetype=application/font-woff'
-      }, {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?name=assets/fonts/[name].[ext]&limit=10000&mimetype=application/font-woff'
-      }, {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?name=assets/fonts/[name].[ext]&limit=10000&mimetype=application/octet-stream'
-      }, {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file?name=assets/fonts/[name].[ext]'
-      }, {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?name=assets/fonts/[name].[ext]&limit=10000&mimetype=image/svg+xml'
-      }
-    ]
   },
   plugins: [
     new CleanWebpackPlugin(config.dest),
-    new webpack.DefinePlugin({_isDev: !isProduction}),
-    new webpack.ProvidePlugin({
-      '$': 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
-    }),
-    new ExtractTextPlugin('[name]-[hash:6].css'),
-    new webpack.optimize.CommonsChunkPlugin('angular', 'vendor/angular-[hash:6].bundle.js'),
-    new HtmlWebpackPlugin({
-      filename: config.index,
-      template: path.join(config.src, config.template),
-      chunks: ['angular', 'dollarstreet'],
-      minify: {}
+    new webpack.DefinePlugin({
+      isProduction: isProduction,
+      S3_BUCKET: JSON.stringify(S3_BUCKET),
+      CMS_SERVER_API: JSON.stringify(CMS_SERVER_URL + ':' + EXTERNAL_PORT),
+      CMS_SOCKETS_API: JSON.stringify(CMS_SERVER_URL),
     }),
     new CopyWebpackPlugin([
-      { from: './assets', to: './assets'},
+      { from: './index.tmpl.html', to: './index.html'},
       { from: './components', to: './components'},
-      { from: './libs', to: './libs'}
+      { from: './assets', to: './assets'},
+      { from: './assets/js/jquery.fancybox.pack.js', to: './assets/js/jquery.fancybox.pack.js' },
+      { from: './assets/js/angular-file-upload-shim.min.js', to: './assets/js/angular-file-upload-shim.min.js' },
+      { from: './assets/js/angular-file-upload.min.js', to: './assets/js/angular-file-upload.min.js' },
+      { from: './assets/js/ng-breadcrumbs.min.js', to: './assets/js/ng-breadcrumbs.min.js' },
+      { from: './assets/js/photo-area.js', to: './assets/js/photo-area.js' },
+      { from: './libs/**/*.css', to: '.'},
+      { from: './libs/**/*.gif', to: '.'},
+      { from: './libs/**/*.png', to: '.'},
+      { from: './libs/**/*.svg', to: '.'},
+      { from: './libs/**/*.jpg', to: '.'},
+      { from: './libs/bootstrap', to: './libs/bootstrap'},
+      { from: './libs/lodash/lodash.min.js', to: './libs/lodash/lodash.min.js' },
+      { from: './libs/async/lib/async.js', to: './libs/async/lib/async.js' },
+      { from: './libs/components-font-awesome', to: './libs/components-font-awesome'},
+      { from: './libs/jquery/dist/jquery.min.js', to: './libs/jquery/dist/jquery.min.js' },
+      { from: './libs/angular/angular.min.js', to: './libs/angular/angular.min.js' },
+      { from: './libs/metisMenu/jquery.metisMenu.js', to: './libs/metisMenu/jquery.metisMenu.js' },
+      { from: './libs/tinymce-dist/tinymce.js', to: './libs/tinymce-dist/tinymce.js' },
+      { from: './libs/angular-ui-tinymce/src/tinymce.js', to: './libs/angular-ui-tinymce/src/tinymce.js' },
+      { from: './libs/angular-resource/angular-resource.min.js', to: './libs/angular-resource/angular-resource.min.js' },
+      { from: './libs/angular-sanitize/angular-sanitize.min.js', to: './libs/angular-sanitize/angular-sanitize.min.js' },
+      { from: './libs/ngInfiniteScroll/build/ng-infinite-scroll.min.js', to: './libs/ngInfiniteScroll/build/ng-infinite-scroll.min.js' },
+      { from: './libs/angular-google-maps/dist/angular-google-maps.min.js', to: './libs/angular-google-maps/dist/angular-google-maps.min.js' },
+      { from: './libs/angular-ui-router/release/angular-ui-router.min.js', to: './libs/angular-ui-router/release/angular-ui-router.min.js' },
+      { from: './libs/dndLists/angular-drag-and-drop-lists.min.js', to: './libs/dndLists/angular-drag-and-drop-lists.min.js' },
+      { from: './libs/angular-bootstrap/ui-bootstrap-tpls.min.js', to: './libs/angular-bootstrap/ui-bootstrap-tpls.min.js' },
+      { from: './libs/angular-xeditable/dist/js/xeditable.min.js', to: './libs/angular-xeditable/dist/js/xeditable.min.js' },
+      { from: './libs/ng-tags-input/ng-tags-input.min.js', to: './libs/ng-tags-input/ng-tags-input.min.js' },
+      { from: './libs/device.js/lib/device.min.js', to: './libs/device.js/lib/device.min.js' },
+      { from: './libs/angular-ui-select/dist/select.min.js', to: './libs/angular-ui-select/dist/select.min.js' },
+      { from: './libs/async/lib/async.js', to: './libs/async/lib/async.js' },
+      { from: './libs/angular-notify/dist/angular-notify.js', to: './libs/angular-notify/dist/angular-notify.js' },
+      { from: './libs/ng-cropper/dist/ngCropper.all.js', to: './libs/ng-cropper/dist/ngCropper.all.js' },
+      { from: './libs/socket.io-client/dist/socket.io.js', to: './libs/socket.io-client/dist/socket.io.js' },
     ])
   ],
   pushPlugins: function () {
@@ -124,26 +98,9 @@ const wConfig = {
     this.plugins.push.apply(this.plugins, [
       // production only
       new webpack.optimize.UglifyJsPlugin(),
-      /*new CompressionPlugin({
-        asset: '{file}.gz',
-        algorithm: 'gzip',
-        regExp: /\.js$|\.html|\.css|.map$/,
-        threshold: 10240,
-        minRatio: 0.8
-      })*/
     ]);
   },
-  stats: {colors: true, progress: true, children: false},
-  // devServer: {
-    // contentBase: config.dest,
-    // publicPath: '/',
-    // noInfo: true,
-    // hot: true,
-    // inline: true,
-    // historyApiFallback: true,
-    // devtool: 'eval',
-    // proxy: {'*/api/*': 'http://localhost:80'}
-  // }
+  stats: {colors: true, progress: true, children: false}
 };
 
 /* eslint-enable */

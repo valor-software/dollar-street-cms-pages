@@ -99,7 +99,7 @@ $(window).load(function () {
                   ';place=' + currentPlace.name +
                   ';income=' + Math.round(currentPlace.income);*/
 
-        window.imageDownloadUrl = '//static3.dollarstreet.org/' + image.src + 'original-' + image.amazonfilename;
+        window.imageDownloadUrl = '//' + S3_BUCKET + '/' + image.src + 'original-' + image.amazonfilename;
 
         var footer;
 
@@ -118,7 +118,6 @@ $(window).load(function () {
             a.style.display = 'none';
             document.body.appendChild(a);
             a.click();
-            delete a;
           };
           xhr.open('GET', 'http:' + url);
           xhr.send();

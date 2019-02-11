@@ -127,7 +127,7 @@
 1.4.3 / 2016-01-08
 ==================
 
-  * remove `webpack.config.js`
+  * remove `old-webpack.config.js`
 
 1.4.2 / 2016-01-07
 ==================

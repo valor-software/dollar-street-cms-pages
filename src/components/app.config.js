@@ -1,4 +1,4 @@
 angular.module('job').constant('cmsConfig', {
-  serverApi: 'http://localhost:8011',
-  socketsApi: 'http://localhost'
+  serverApi: CMS_SERVER_API,
+  socketsApi: CMS_SOCKETS_API
 });
