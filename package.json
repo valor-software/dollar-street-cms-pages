@@ -24,7 +24,7 @@
     "bootstrap-webpack": "0.0.5",
     "eslint": "1.6.0",
     "jquery": "2.1.4",
-    "lodash": "4.16.4",
+    "lodash": "4.17.19",
     "moment": "2.15.2",
     "ng-infinite-scroll": "1.2.0",
     "webpack": "1.12.2"
